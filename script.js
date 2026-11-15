@@ -1,394 +1,630 @@
-(function() {
-    "use strict";
+const questions = [
+    {
+        question: "تعرف بيئات التعلم الشخصية بأنها أنظمة تدعم التعليم والتعلم وتحاكي البيئة الحقيقية وتعمل عبر الإنترنت.",
+        answers: [
+            { text: "صح", correct: true },
+            { text: "خطا", correct: false },
+        ]
+    },
+    {
+        question: "أي مما يلي لا يعتبر من منصات العوالم الافتراضية؟",
+        answers: [
+            { text: "Activeworlds", correct: false },
+            { text: "Dreamweaver", correct: true },
+            { text: "Second Life", correct: false },
+            { text: "OpenSimulator", correct: false },
+        ]
+    },
+    {
+        question: "يحتاج الإنترنت إلى تطابق أجهزة الكمبيوتر وأنظمة التشغيل المستخدمة مع الأجهزة المستخدمة في الإرسال.",
+        answers: [
+            { text: "صح", correct: true },
+            { text: "خطا", correct: false },
+        ]
+    },
+    {
+        question: "أي مما يلي ليس من مميزات التعليم الإلكتروني؟",
+        answers: [
+            { text: "تجاوز الفروق العمرية", correct: false },
+            { text: "تحديد مكان وزمان للتعلم", correct: true },
+            { text: "المرونة في الوقت", correct: false },
+            { text: "توفير بيئة تعلم تفاعلية", correct: false },
+        ]
+    },
+    {
+        question: "ينظر الواقع الافتراضي على أنه قاعدة بيانات حاسوبية تسمح للمستخدم بالوصول للمعلومات في أشكال مختلفة.",
+        answers: [
+            { text: "صح", correct: false },
+            { text: "خطا", correct: true },
+        ]
+    },
+    {
+        question: "أي مما يلي ليس من مراحل تطور التعليم الإلكتروني؟",
+        answers: [
+            { text: "التعلم المعتمد على المكونات المادية", correct: false },
+            { text: "التعلم المعتمد على شبكات التواصل", correct: false },
+            { text: "التعلم المعتمد على الوسائط المتعددة", correct: true },
+            { text: "التعلم المعتمد على الإنترنت", correct: false },
+        ]
+    },
+    {
+        question: "يقدم تطبيق Human body VR 3D خدمة عرض المدن والشوارع بصورة ثلاثية الأبعاد بدقة عالية.",
+        answers: [
+            { text: "صح", correct: false },
+            { text: "خطا", correct: true },
+        ]
+    },
+    {
+        question: "أي مما يلي يعتبر من أدوات التواصل في التعليم الإلكتروني؟",
+        answers: [
+            { text: "المدونات", correct: true },
+            { text: "القلم الرصاص", correct: false },
+            { text: "السبورة الطباشيرية", correct: false },
+            { text: "الكتاب الورقي", correct: false },
+        ]
+    },
+    {
+        question: "يتطلب التعليم الإلكتروني عقد اللقاءات والاجتماعات الإلكترونية.",
+        answers: [
+            { text: "صح", correct: true },
+            { text: "خطا", correct: false },
+        ]
+    },
+    {
+        question: "أي مما يلي لا يعد من أنواع التعليم الإلكتروني؟",
+        answers: [
+            { text: "التعليم المدمج", correct: false },
+            { text: "التعليم المتزامن", correct: false },
+            { text: "التعليم غير المتزامن", correct: false },
+            { text: "التعليم التقليدي البحت", correct: true },
+        ]
+    }
+];
 
-    // ---------- البيانات الأولية (قاعدة أسئلة وأجوبة) ----------
-    const DEFAULT_QUESTIONS = [
-        {
-            id: 1,
-            title: "كيف أشغل الكمبيوتر؟",
-            category: "الحاسوب الأساسي",
-            summary: "ابحث عن زر صغير مكتوب عليه رمز الدائرة مع الخط في الجانب أو الأمام. اضغط عليه مرة واحدة فقط وانتظر.",
-            steps: [
-                "ابحث عن زر التشغيل (دائرة مع خط).",
-                "اضغط عليه مرة واحدة.",
-                "انتظر دقيقة أو دقيقتين حتى تظهر الشاشة الرئيسية."
-            ],
-            tip: "لا تضغط على الزر بقوة، فقط ضغطة خفيفة."
-        },
-        {
-            id: 2,
-            title: "كيف أوقف تشغيل الكمبيوتر بشكل صحيح؟",
-            category: "الحاسوب الأساسي",
-            summary: "لا تضغط على زر التشغيل مباشرة. استخدم قائمة ابدأ.",
-            steps: [
-                "انقر على أيقونة 'ابدأ' في أسفل الشاشة.",
-                "انقر على أيقونة الطاقة.",
-                "اختر 'إيقاف التشغيل'.",
-                "انتظر حتى تُطفأ الشاشة تلقائياً."
-            ],
-            tip: "إيقاف التشغيل الصحيح يحمي جهازك."
-        },
-        {
-            id: 3,
-            title: "كيف أرفع صوت الكمبيوتر أو أخفضه؟",
-            category: "الحاسوب الأساسي",
-            summary: "ابحث عن أيقونة مكبر الصوت في أسفل يمين الشاشة.",
-            steps: [
-                "انقر على أيقونة مكبر الصوت.",
-                "سيظهر شريط تحكم، حركه يميناً لرفع الصوت ويساراً لخفضه."
-            ],
-            tip: "تأكد من أن السماعات موصولة إذا كنت لا تسمع شيئاً."
-        },
-        {
-            id: 4,
-            title: "كيف أفتح برنامج Word؟",
-            category: "البرامج والتطبيقات",
-            summary: "ابحث عن أيقونة زرقاء مكتوب عليها W.",
-            steps: [
-                "ابحث على سطح المكتب عن أيقونة Word الزرقاء.",
-                "انقر عليها مرتين نقراً سريعاً.",
-                "انتظر قليلاً حتى يفتح البرنامج."
-            ],
-            tip: "إذا لم تجد الأيقونة، ابحث في قائمة ابدأ."
-        },
-        {
-            id: 5,
-            title: "كيف أحفظ ملفاً في Word؟",
-            category: "البرامج والتطبيقات",
-            summary: "استخدم أمر 'حفظ' من قائمة ملف.",
-            steps: [
-                "انقر على 'ملف' في الأعلى.",
-                "اختر 'حفظ'.",
-                "اختر مكان الحفظ واكتب اسماً للملف.",
-                "انقر 'حفظ'."
-            ],
-            tip: "احفظ عملك باستمرار حتى لا تفقده."
-        },
-        {
-            id: 6,
-            title: "كيف أبحث عن شيء على الإنترنت؟",
-            category: "الإنترنت والتواصل",
-            summary: "افتح المتصفح واكتب ما تريد في شريط البحث.",
-            steps: [
-                "افتح متصفح Chrome أو Edge.",
-                "في شريط العنوان اكتب google.com ثم اضغط Enter.",
-                "في مربع بحث جوجل اكتب ما تريد البحث عنه.",
-                "اضغط Enter وستظهر النتائج."
-            ],
-            tip: "يمكنك استخدام كلمات بسيطة بالعربية."
-        },
-        {
-            id: 7,
-            title: "كيف أرسل صورة على الواتساب؟",
-            category: "الإنترنت والتواصل",
-            summary: "افتح محادثة الشخص وانقر على أيقونة المشبك لإرفاق الصورة.",
-            steps: [
-                "افتح واتساب واذهب إلى المحادثة المطلوبة.",
-                "انقر على أيقونة المشبك (إرفاق).",
-                "اختر 'الصور' ثم حدد الصورة.",
-                "انقر على زر الإرسال (السهم الأخضر)."
-            ],
-            tip: "تأكد من اتصالك بالإنترنت قبل الإرسال."
-        }
-    ];
+const USER_KEY = 'quiz_username';
+const EMAIL_KEY = 'quiz_email';
+const PASSWORD_KEY = 'quiz_password';
+const VIDEO_URL = 'https://www.youtube.com/embed/MoCaRMdq-Qw';
+const loginContainer = document.getElementById("login-container");
+const quizContainer = document.getElementById("quiz-container");
+const resultContainer = document.getElementById("result-container");
+const usernameInput = document.getElementById("username-input");
+const emailInput = document.getElementById("email-input");
+const passwordInput = document.getElementById("password-input");
+const loginButton = document.getElementById("login-button");
+const questionsContainer = document.getElementById("questions-container");
+const submitButton = document.getElementById("submit-button");
+const totalQuestionsElement = document.getElementById("total-questions");
+const totalQuestionsInfo = document.getElementById("total-questions-info");
+const currentUserElement = document.getElementById("current-user");
+const logoutDuringQuizBtn = document.getElementById("logout-during-quiz");
+const answeredCountElement = document.getElementById("answered-count");
+const progressFill = document.getElementById("progress-fill");
+const currentQuestionElement = document.getElementById("current-question");
+const completionMessage = document.getElementById("completion-message");
 
-    // ---------- متغيرات عامة ----------
-    let questions = [];
-    const STORAGE_KEY = 'askAndLearnQuestions';
+// عناصر الفيديو
+const showVideoBtn = document.getElementById("show-video-btn");
+const videoContainer = document.getElementById("video-container");
+const videoFrame = document.getElementById("video-frame");
+const closeVideoBtn = document.getElementById("close-video-btn");
+const showVideoQuizBtn = document.getElementById("show-video-quiz");
+const videoModal = document.getElementById("video-modal");
+const modalVideoFrame = document.getElementById("modal-video-frame");
+const closeModalBtn = document.getElementById("close-modal-btn");
 
-    // عناصر DOM
-    const homeSection = document.getElementById('home');
-    const categoriesSection = document.getElementById('categories');
-    const addQuestionSection = document.getElementById('add-question');
-    const answerSection = document.getElementById('answerSection');
+// تهيئة العناصر
+function initElements() {
+    totalQuestionsElement.textContent = questions.length;
+    totalQuestionsInfo.textContent = questions.length;
     
-    const navTabs = document.querySelectorAll('.nav-tab');
-    const contentSections = document.querySelectorAll('.content-section');
-
-    const searchInput = document.getElementById('searchInput');
-    const suggestionsList = document.getElementById('suggestionsList');
-    const popularQuestionsList = document.getElementById('popularQuestionsList');
-    const categoriesContainer = document.getElementById('categoriesContainer');
-    const categoryQuestionsList = document.getElementById('categoryQuestionsList');
-
-    const backToHomeBtn = document.getElementById('backToHomeBtn');
-    const answerQuestionTitle = document.getElementById('answerQuestionTitle');
-    const answerSummary = document.getElementById('answerSummary');
-    const answerSteps = document.getElementById('answerSteps');
-    const answerTip = document.getElementById('answerTip');
-    const rateYesBtn = document.getElementById('rateYesBtn');
-    const rateNoBtn = document.getElementById('rateNoBtn');
-    const feedbackMessage = document.getElementById('feedbackMessage');
-
-    const submitQuestionBtn = document.getElementById('submitQuestionBtn');
-    const newQuestionTitle = document.getElementById('newQuestionTitle');
-    const newQuestionDetails = document.getElementById('newQuestionDetails');
-    const addQuestionMessage = document.getElementById('addQuestionMessage');
-
-    let currentQuestionId = null;
-
-    // ---------- دوال التخزين ----------
-    function loadQuestions() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            try {
-                questions = JSON.parse(stored);
-            } catch(e) {
-                questions = [...DEFAULT_QUESTIONS];
-            }
-        } else {
-            questions = [...DEFAULT_QUESTIONS];
-        }
-        saveQuestions();
+    // تعيين رابط الفيديو
+    if (videoFrame) videoFrame.src = VIDEO_URL;
+    if (modalVideoFrame) modalVideoFrame.src = VIDEO_URL;
+    
+    // إضافة مستمعي الأحداث للفيديو
+    if (showVideoBtn) {
+        showVideoBtn.addEventListener('click', showVideoInPage);
     }
-
-    function saveQuestions() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
+    
+    if (closeVideoBtn) {
+        closeVideoBtn.addEventListener('click', hideVideoInPage);
     }
-
-    // ---------- دوال العرض ----------
-    function renderPopularQuestions() {
-        // عرض أول 5 أسئلة كأكثر شيوعاً
-        const popular = questions.slice(0, 5);
-        popularQuestionsList.innerHTML = '';
-        popular.forEach(q => {
-            const li = document.createElement('li');
-            li.className = 'question-item';
-            li.innerHTML = `<span class="question-text">${q.title}</span>`;
-            li.addEventListener('click', () => showAnswer(q.id));
-            popularQuestionsList.appendChild(li);
-        });
+    
+    if (showVideoQuizBtn) {
+        showVideoQuizBtn.addEventListener('click', showVideoModal);
     }
-
-    function renderCategories() {
-        const categoriesSet = new Set(questions.map(q => q.category));
-        const categories = Array.from(categoriesSet);
-        categoriesContainer.innerHTML = '';
-        categories.forEach(cat => {
-            const card = document.createElement('div');
-            card.className = 'category-card';
-            card.textContent = cat;
-            card.addEventListener('click', () => showCategoryQuestions(cat));
-            categoriesContainer.appendChild(card);
-        });
+    
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', hideVideoModal);
     }
-
-    function showCategoryQuestions(category) {
-        const filtered = questions.filter(q => q.category === category);
-        categoryQuestionsList.innerHTML = `<h3>أسئلة ${category}</h3>`;
-        if (filtered.length === 0) {
-            categoryQuestionsList.innerHTML += '<p>لا توجد أسئلة في هذا التصنيف بعد.</p>';
-            return;
-        }
-        const ul = document.createElement('ul');
-        ul.className = 'question-list';
-        filtered.forEach(q => {
-            const li = document.createElement('li');
-            li.className = 'question-item';
-            li.innerHTML = `<span class="question-text">${q.title}</span>`;
-            li.addEventListener('click', () => showAnswer(q.id));
-            ul.appendChild(li);
-        });
-        categoryQuestionsList.appendChild(ul);
-    }
-
-    function showAnswer(questionId) {
-        const question = questions.find(q => q.id === questionId);
-        if (!question) return;
-
-        currentQuestionId = questionId;
-        answerQuestionTitle.textContent = question.title;
-        answerSummary.textContent = question.summary;
-
-        // خطوات
-        answerSteps.innerHTML = '';
-        const stepsOl = document.createElement('ol');
-        stepsOl.className = 'steps-list';
-        question.steps.forEach(step => {
-            const li = document.createElement('li');
-            li.textContent = step;
-            stepsOl.appendChild(li);
-        });
-        answerSteps.appendChild(stepsOl);
-
-        answerTip.textContent = question.tip || 'تذكر دائماً حفظ عملك.';
-
-        // إخفاء الأقسام الأخرى
-        homeSection.classList.remove('active');
-        categoriesSection.classList.remove('active');
-        addQuestionSection.classList.remove('active');
-        answerSection.style.display = 'block';
-
-        // إعادة تعيين التقييم
-        feedbackMessage.textContent = '';
-        rateYesBtn.classList.remove('selected');
-        rateNoBtn.classList.remove('selected');
-    }
-
-    function hideAnswer() {
-        answerSection.style.display = 'none';
-        // تفعيل القسم الرئيسي
-        homeSection.classList.add('active');
-        categoriesSection.classList.remove('active');
-        addQuestionSection.classList.remove('active');
-        // تحديث التبويب النشط
-        document.querySelector('.nav-tab[data-section="home"]').classList.add('active');
-        document.querySelector('.nav-tab[data-section="categories"]').classList.remove('active');
-        document.querySelector('.nav-tab[data-section="add-question"]').classList.remove('active');
-    }
-
-    // ---------- البحث والاقتراحات ----------
-    function updateSuggestions(query) {
-        if (query.length < 2) {
-            suggestionsList.style.display = 'none';
-            return;
-        }
-        const matched = questions.filter(q => 
-            q.title.includes(query) || q.summary.includes(query)
-        ).slice(0, 5);
-        
-        if (matched.length === 0) {
-            suggestionsList.style.display = 'none';
-            return;
-        }
-        
-        suggestionsList.innerHTML = '';
-        matched.forEach(q => {
-            const li = document.createElement('li');
-            li.textContent = q.title;
-            li.addEventListener('click', () => {
-                searchInput.value = q.title;
-                suggestionsList.style.display = 'none';
-                showAnswer(q.id);
-            });
-            suggestionsList.appendChild(li);
-        });
-        suggestionsList.style.display = 'block';
-    }
-
-    // ---------- إضافة سؤال جديد ----------
-    function addNewQuestion(title, details) {
-        const newId = questions.length > 0 ? Math.max(...questions.map(q => q.id)) + 1 : 1;
-        const newQuestion = {
-            id: newId,
-            title: title,
-            category: "أسئلة المستخدمين", // تصنيف مؤقت
-            summary: details || "لم يتم تقديم تفاصيل إضافية.",
-            steps: ["سيتم إضافة الخطوات قريباً بعد المراجعة."],
-            tip: "شكراً على سؤالك! فريقنا يعمل على الإجابة."
-        };
-        questions.push(newQuestion);
-        saveQuestions();
-        
-        // تحديث الواجهات
-        renderPopularQuestions();
-        renderCategories();
-        
-        addQuestionMessage.style.display = 'block';
-        addQuestionMessage.textContent = 'تم استلام سؤالك بنجاح! سنقوم بمراجعته وإضافته قريباً.';
-        
-        // تفريغ الحقول
-        newQuestionTitle.value = '';
-        newQuestionDetails.value = '';
-        
-        setTimeout(() => {
-            addQuestionMessage.style.display = 'none';
-        }, 4000);
-    }
-
-    // ---------- التبويبات ----------
-    function switchTab(sectionId) {
-        // إخفاء الكل
-        contentSections.forEach(s => s.classList.remove('active'));
-        answerSection.style.display = 'none';
-        
-        // إظهار المطلوب
-        if (sectionId === 'home') {
-            homeSection.classList.add('active');
-        } else if (sectionId === 'categories') {
-            categoriesSection.classList.add('active');
-            renderCategories();
-            categoryQuestionsList.innerHTML = ''; // مسح الأسئلة السابقة
-        } else if (sectionId === 'add-question') {
-            addQuestionSection.classList.add('active');
-        }
-        
-        // تحديث التبويبات النشطة
-        navTabs.forEach(tab => {
-            if (tab.dataset.section === sectionId) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
+    
+    // إغلاق النافذة المنبثقة عند النقر خارجها
+    if (videoModal) {
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                hideVideoModal();
             }
         });
     }
+}
 
-    // ---------- التهيئة ----------
-    function init() {
-        loadQuestions();
-        renderPopularQuestions();
-        renderCategories();
-
-        // أحداث التبويبات
-        navTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const sectionId = tab.dataset.section;
-                switchTab(sectionId);
-            });
-        });
-
-        // البحث
-        searchInput.addEventListener('input', (e) => {
-            updateSuggestions(e.target.value);
-        });
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const query = searchInput.value.trim();
-                if (query) {
-                    const matched = questions.find(q => q.title.includes(query));
-                    if (matched) {
-                        showAnswer(matched.id);
-                        searchInput.value = '';
-                        suggestionsList.style.display = 'none';
-                    } else {
-                        alert('لم نجد سؤالاً مطابقاً. جرب كلمات أخرى أو أضف سؤالاً جديداً.');
-                    }
-                }
-            }
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
-                suggestionsList.style.display = 'none';
-            }
-        });
-
-        // العودة
-        backToHomeBtn.addEventListener('click', hideAnswer);
-
-        // تقييم الإجابة
-        rateYesBtn.addEventListener('click', () => {
-            feedbackMessage.textContent = 'شكراً لك! سعيدون بأن الإجابة أفادتك.';
-            rateYesBtn.classList.add('selected');
-            rateNoBtn.classList.remove('selected');
-        });
-        rateNoBtn.addEventListener('click', () => {
-            feedbackMessage.textContent = 'نأسف لذلك. سنعمل على تحسين الإجابة. شكراً لملاحظتك.';
-            rateNoBtn.classList.add('selected');
-            rateYesBtn.classList.remove('selected');
-        });
-
-        // إضافة سؤال
-        submitQuestionBtn.addEventListener('click', () => {
-            const title = newQuestionTitle.value.trim();
-            if (!title) {
-                alert('الرجاء كتابة السؤال.');
-                return;
-            }
-            const details = newQuestionDetails.value.trim();
-            addNewQuestion(title, details);
-        });
+// دالة لعرض الإشعارات
+function showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notification-text');
+    
+    notificationText.textContent = message;
+    
+    // إضافة اللون حسب نوع الإشعار
+    if (type === 'success') {
+        notification.style.backgroundColor = '#28a745';
+    } else if (type === 'error') {
+        notification.style.backgroundColor = '#dc3545';
+    } else if (type === 'warning') {
+        notification.style.backgroundColor = '#ffc107';
+        notification.style.color = '#212529';
+    } else {
+        notification.style.backgroundColor = '#007bff';
     }
+    
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
 
-    init();
-})();
+// عرض الفيديو في صفحة التسجيل
+function showVideoInPage() {
+    if (videoContainer && videoFrame) {
+        videoContainer.style.display = 'block';
+        videoFrame.src = VIDEO_URL;
+        
+        // تمرير إلى قسم الفيديو
+        videoContainer.scrollIntoView({ behavior: 'smooth' });
+        
+        // showNotification('جارٍ تشغيل الفيديو التعريفي', 'info');
+    }
+}
+
+// إخفاء الفيديو في صفحة التسجيل
+function hideVideoInPage() {
+    if (videoContainer) {
+        videoContainer.style.display = 'none';
+    }
+}
+
+// عرض نافذة الفيديو المنبثقة
+function showVideoModal() {
+    if (videoModal && modalVideoFrame) {
+        videoModal.style.display = 'flex';
+        modalVideoFrame.src = VIDEO_URL;
+        
+        // إيقاف أي فيديو آخر يعمل
+        if (videoFrame) {
+            videoFrame.src = videoFrame.src; // إعادة تحميل لإيقافه
+        }
+        
+        showNotification('فتح الفيديو في نافذة منبثقة', 'info');
+    }
+}
+
+// إخفاء نافذة الفيديو المنبثقة
+function hideVideoModal() {
+    if (videoModal) {
+        videoModal.style.display = 'none';
+        
+        // إيقاف الفيديو عند الإغلاق
+        if (modalVideoFrame) {
+            modalVideoFrame.src = modalVideoFrame.src; // إعادة تحميل لإيقافه
+        }
+    }
+}
+
+// التحقق من حالة تسجيل الدخول
+function checkLoginState() {
+    const username = localStorage.getItem(USER_KEY);
+    const email = localStorage.getItem(EMAIL_KEY);
+    
+    // إخفاء جميع الحاويات أولاً
+    loginContainer.style.display = 'none';
+    quizContainer.style.display = 'none';
+    resultContainer.style.display = 'none';
+    
+    if (username && email) {
+        // المستخدم مسجل دخول
+        currentUserElement.textContent = `مرحباً ${username}`;
+        quizContainer.style.display = 'block';
+        startQuiz();
+    } else {
+        // المستخدم غير مسجل دخول
+        loginContainer.style.display = 'block';
+    }
+}
+
+// تسجيل الدخول
+function handleLogin() {
+    const username = usernameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    
+    if (!username || !email || !password) {
+        showNotification("الرجاء إدخال جميع البيانات المطلوبة", 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showNotification("كلمة المرور يجب أن تتكون من 6 أحرف على الأقل", 'error');
+        return;
+    }
+    
+    // التحقق من صحة البريد الإلكتروني
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showNotification("الرجاء إدخال بريد إلكتروني صحيح", 'error');
+        return;
+    }
+    
+    // حفظ بيانات المستخدم
+    localStorage.setItem(USER_KEY, username);
+    localStorage.setItem(EMAIL_KEY, email);
+    localStorage.setItem(PASSWORD_KEY, password);
+    
+    showNotification(`مرحباً ${username}! تم تسجيل الدخول بنجاح`, 'success');
+    
+    // الانتقال إلى الاختبار
+    setTimeout(() => {
+        checkLoginState();
+    }, 1000);
+}
+
+// بدء الاختبار
+function startQuiz() {
+    // خلط الأسئلة
+    shuffleArray(questions);
+    
+    // مسح المحتوى القديم
+    questionsContainer.innerHTML = '';
+    
+    // إنشاء الأسئلة
+    questions.forEach((question, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.className = 'question-item';
+        questionElement.dataset.index = index;
+        
+        // خلط الإجابات
+        const shuffledAnswers = [...question.answers];
+        shuffleArray(shuffledAnswers);
+        
+        questionElement.innerHTML = `
+            <div class="question-text">${index + 1}. ${question.question}</div>
+            <div class="answers-container" id="answers-${index}">
+                ${shuffledAnswers.map((answer, ansIndex) => `
+                    <label class="answer-label">
+                        <input type="radio" name="question-${index}" value="${ansIndex}" required>
+                        <span>${answer.text}</span>
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        questionsContainer.appendChild(questionElement);
+    });
+    
+    submitButton.style.display = 'block';
+    submitButton.disabled = true;
+    submitButton.style.opacity = '0.6';
+    submitButton.style.cursor = 'not-allowed';
+    submitButton.textContent = `أجب على جميع الأسئلة (0/${questions.length})`;
+    
+    setupAnswerValidation();
+    updateProgress();
+}
+
+// خلط المصفوفة
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// إعداد التحقق من الإجابات
+function setupAnswerValidation() {
+    const radioInputs = document.querySelectorAll('input[type="radio"]');
+    
+    radioInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            checkAllQuestionsAnswered();
+            updateProgress();
+        });
+    });
+}
+
+// التحقق من إجابة جميع الأسئلة
+function checkAllQuestionsAnswered() {
+    const totalQuestions = questions.length;
+    let answeredCount = 0;
+    
+    for (let i = 0; i < totalQuestions; i++) {
+        const answered = document.querySelector(`input[name="question-${i}"]:checked`);
+        if (answered) {
+            answeredCount++;
+        }
+    }
+    
+    if (answeredCount === totalQuestions) {
+        submitButton.disabled = false;
+        submitButton.style.opacity = '1';
+        submitButton.style.cursor = 'pointer';
+        submitButton.textContent = `إرسال الإجابات (${answeredCount}/${totalQuestions})`;
+        completionMessage.style.display = 'block';
+    } else {
+        submitButton.disabled = true;
+        submitButton.style.opacity = '0.6';
+        submitButton.style.cursor = 'not-allowed';
+        submitButton.textContent = `أجب على جميع الأسئلة (${answeredCount}/${totalQuestions})`;
+        completionMessage.style.display = 'none';
+    }
+    
+    answeredCountElement.textContent = answeredCount;
+}
+
+// تحديث شريط التقدم
+function updateProgress() {
+    const totalQuestions = questions.length;
+    let answeredCount = 0;
+    
+    for (let i = 0; i < totalQuestions; i++) {
+        const answered = document.querySelector(`input[name="question-${i}"]:checked`);
+        if (answered) {
+            answeredCount++;
+        }
+    }
+    
+    const progressPercentage = (answeredCount / totalQuestions) * 100;
+    progressFill.style.width = `${progressPercentage}%`;
+    currentQuestionElement.textContent = answeredCount;
+}
+
+// حساب النتيجة
+function calculateScore() {
+    let score = 0;
+    
+    questions.forEach((question, index) => {
+        const selectedAnswer = document.querySelector(`input[name="question-${index}"]:checked`);
+        
+        if (selectedAnswer) {
+            const answerIndex = parseInt(selectedAnswer.value);
+            if (question.answers[answerIndex].correct) {
+                score++;
+            }
+        }
+    });
+    
+    return score;
+}
+
+// عرض الإجابات الصحيحة
+function showCorrectAnswers() {
+    const username = localStorage.getItem(USER_KEY);
+    const email = localStorage.getItem(EMAIL_KEY);
+    const userScore = calculateScore();
+    
+    let answersHTML = `
+        <h2>الإجابات الصحيحة</h2>
+        <p><strong>الاسم:</strong> ${username}</p>
+        <p><strong>البريد الإلكتروني:</strong> ${email}</p>
+        <p><strong>نتيجتك:</strong> <span style="color:#007bff; font-weight:bold;">${userScore} / ${questions.length}</span></p>
+        
+        <div class="result-video-container">
+            <h3><i class="fas fa-video"></i> الفيديو التعريفي</h3>
+            <div class="result-video-wrapper">
+                <iframe 
+                    src="${VIDEO_URL}" 
+                    title="فيديو تعريفي عن التعليم الإلكتروني"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p style="margin-top: 10px; color: #666; text-align: center;">يمكنك مشاهدة الفيديو مرة أخرى لتذكر مفاهيم التعليم الإلكتروني</p>
+        </div>
+        
+        <div class="answers-review">
+    `;
+    
+    questions.forEach((question, index) => {
+        const correctAnswer = question.answers.find(answer => answer.correct);
+        const userAnswerElement = document.querySelector(`input[name="question-${index}"]:checked`);
+        let userAnswerText = "لم تجب على هذا السؤال";
+        let answerClass = "not-answered";
+        
+        if (userAnswerElement) {
+            const answerIndex = parseInt(userAnswerElement.value);
+            userAnswerText = question.answers[answerIndex].text;
+            answerClass = question.answers[answerIndex].correct ? "correct" : "incorrect";
+        }
+        
+        answersHTML += `
+            <div class="answer-item">
+                <div class="question-review">
+                    <strong>${index + 1}. ${question.question}</strong>
+                </div>
+                <div class="user-answer ${answerClass}">
+                    <strong>إجابتك:</strong> ${userAnswerText}
+                </div>
+                <div class="correct-answer">
+                    <strong>الإجابة الصحيحة:</strong> ${correctAnswer.text}
+                </div>
+            </div>
+        `;
+    });
+    
+    answersHTML += `
+        </div>
+        <button id="back-to-result" class="btn" style="background:#6c757d; margin-top:15px;">العودة للنتيجة</button>
+        <button id="logout-btn-answers" class="btn" style="background:#dc3545; margin-top:15px;">تسجيل الخروج</button>
+    `;
+    
+    resultContainer.innerHTML = answersHTML;
+    
+    document.getElementById("back-to-result").addEventListener("click", showFinalResult);
+    document.getElementById("logout-btn-answers").addEventListener("click", logoutUser);
+}
+
+// عرض النتيجة النهائية
+function showFinalResult() {
+    const score = calculateScore();
+    const username = localStorage.getItem(USER_KEY);
+    const email = localStorage.getItem(EMAIL_KEY);
+    const percentage = Math.round((score / questions.length) * 100);
+    
+    let performanceLevel = "";
+    let performanceColor = "";
+    
+    if (percentage >= 90) {
+        performanceLevel = "ممتاز ";
+        performanceColor = "#28a745";
+    } else if (percentage >= 80) {
+        performanceLevel = "جيد جداً ";
+        performanceColor = "#17a2b8";
+    } else if (percentage >= 70) {
+        performanceLevel = "جيد ";
+        performanceColor = "#ffc107";
+    } else if (percentage >= 60) {
+        performanceLevel = "مقبول ";
+        performanceColor = "#fd7e14";
+    } else {
+        performanceLevel = "يحتاج تحسين ";
+        performanceColor = "#dc3545";
+    }
+    
+    quizContainer.style.display = "none";
+    resultContainer.innerHTML = `
+        <div class="final-result-container">
+            <div class="result-header">
+                <h2> نتيجتك النهائية</h2>
+                <div class="divider"></div>
+            </div>
+            
+            <div class="user-info">
+                <div class="info-item">
+                    <span class="info-label"> الاسم:</span>
+                    <span class="info-value">${username}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">البريد الإلكتروني:</span>
+                    <span class="info-value">${email}</span>
+                </div>
+            </div>
+            
+            <div class="score-display">
+                <div class="score-circle" style="border-color: ${performanceColor}">
+                    <span class="score-number">${score}</span>
+                    <span class="score-total">/${questions.length}</span>
+                </div>
+                <div class="percentage" style="color: ${performanceColor}">
+                    ${percentage}%
+                </div>
+                <div class="performance-level" style="color: ${performanceColor}">
+                    ${performanceLevel}
+                </div>
+            </div>
+            
+            <div class="result-video-container">
+                <h3><i class="fas fa-video"></i> الفيديو التعريفي</h3>
+                <div class="result-video-wrapper">
+                    <iframe 
+                        src="${VIDEO_URL}" 
+                        title="فيديو تعريفي عن التعليم الإلكتروني"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p style="margin-top: 10px; color: #666; text-align: center;">شاهد الفيديو مرة أخرى لتثبيت مفاهيم التعليم الإلكتروني</p>
+            </div>
+            
+            <div class="result-actions">
+                <button id="show-answers-btn" class="btn result-btn">
+                     <i class="fas fa-list-check"></i> عرض الإجابات الصحيحة
+                </button>
+                <button id="restart-btn" class="btn result-btn">
+                    <i class="fas fa-redo"></i> إعادة الاختبار
+                </button>
+                <button id="logout-btn" class="btn result-btn">
+                     <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+            </div>
+            
+            <div class="result-footer">
+                <p>نصيحة: استمر في التعلم وتدرب أكثر لتحسين نتائجك</p>
+            </div>
+        </div>
+    `;
+    resultContainer.style.display = "block";
+    
+    document.getElementById("restart-btn").addEventListener("click", restartQuiz);
+    document.getElementById("logout-btn").addEventListener("click", logoutUser);
+    document.getElementById("show-answers-btn").addEventListener("click", showCorrectAnswers);
+}
+
+// إعادة الاختبار
+function restartQuiz() {
+    resultContainer.style.display = "none";
+    quizContainer.style.display = "block";
+    startQuiz();
+}
+
+// تسجيل الخروج
+function logoutUser() {
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(EMAIL_KEY);
+    localStorage.removeItem(PASSWORD_KEY);
+    
+    // إيقاف أي فيديو يعمل
+    if (videoFrame) videoFrame.src = videoFrame.src;
+    if (modalVideoFrame) modalVideoFrame.src = modalVideoFrame.src;
+    
+    showNotification("تم تسجيل الخروج بنجاح", 'info');
+    
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+// تسجيل الخروج أثناء الاختبار
+function logoutDuringQuiz() {
+    if (confirm("هل تريد تسجيل الخروج؟ سيتم فقدان تقدمك الحالي في الاختبار.")) {
+        logoutUser();
+    }
+}
+
+// تهيئة التطبيق عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    initElements();
+    checkLoginState();
+    
+    // إضافة مستمعي الأحداث
+    loginButton.addEventListener('click', handleLogin);
+    submitButton.addEventListener('click', showFinalResult);
+    
+    if (logoutDuringQuizBtn) {
+        logoutDuringQuizBtn.addEventListener('click', logoutDuringQuiz);
+    }
+    
+    // السماح بتسجيل الدخول باستخدام زر Enter
+    usernameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+    
+    emailInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+    
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+});
